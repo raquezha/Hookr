@@ -54,6 +54,7 @@ In case something went wrong you can set a callback,
 <br>just call the lambda and `it` will be the error message.
 ```kotlin
 Hook.up(context).withSMS(sampleNumber) {
+  ...
   Log.e("Hookr", "error: $it")
 }
 ```
