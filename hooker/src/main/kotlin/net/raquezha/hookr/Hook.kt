@@ -109,8 +109,8 @@ class Hookers(@NonNull var ctx: Context) {
                 if (isValidMobileNumber(mobileNumber)) {
                     intent.data = Uri.parse("tel:$mobileNumber")
                 } else {
-                    return null
                     listener?.invoke(requiredMobileNumber)
+                    return null
                 }
             }
         }
