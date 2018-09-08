@@ -1,6 +1,6 @@
 
 # Hookr (Kotlin)
-I use this in my applications and I thought I just make it into a library.
+I use this in my applications and I thought I just make it into a library.<br>
 Simple Utility that hook up your app to this various external applications:
 
 1. Inbox (SMS)
@@ -50,7 +50,8 @@ Hook.up(context).withWhatsApp(facebookId)
 
 ### Error Callback
 
-In case something went wrong you can set a callback, just call the lambda and `it` will be the error message.
+In case something went wrong you can set a callback,
+<br>just call the lambda and `it` will be the error message.
 ```kotlin
 Hook.up(context).withSMS(sampleNumber) {
   toast(it)
