@@ -25,12 +25,13 @@ class MainActivity : AppCompatActivity() {
         tvAppVersion.text = "App Version: ${BuildConfig.VERSION_NAME}"
         tvBuildDate.text = "Build Date: $buildDate"
 
+        val sample_number = "+639123456780"
         btnSMS.setOnClickListener {
-            Hook.up(this@MainActivity).withSMS("+639154543084")
+            Hook.up(this@MainActivity).withSMS(sample_number)
         }
 
         btnCall.setOnClickListener {
-            Hook.up(this@MainActivity).withPhoneCall("+639154543084")
+            Hook.up(this@MainActivity).withPhoneCall(sample_number)
         }
 
         btnMessenger.setOnClickListener {
@@ -38,11 +39,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnViber.setOnClickListener {
-            Hook.up(this@MainActivity).withViber("+639154543084")
+            Hook.up(this@MainActivity).withViber(sample_number)
         }
 
         btnWhatsapp.setOnClickListener {
-            Hook.up(this@MainActivity).withWhatsApp("+639154543084")
+            Hook.up(this@MainActivity).withWhatsApp(sample_number)
         }
     }
 }
