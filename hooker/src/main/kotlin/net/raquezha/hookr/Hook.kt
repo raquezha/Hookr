@@ -33,7 +33,7 @@ class Hookers(var ctx: Context) {
     }
 
     fun withWhatsApp(@NonNull mobileNumber: String) {
-        startHooking(Hookrs.PHONE_CALL, null, mobileNumber)
+        startHooking(Hookrs.WHATSAPP, null, mobileNumber)
     }
 
     private fun startHooking(app: Hookrs, mobileNumber: String) {
