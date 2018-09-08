@@ -50,8 +50,7 @@ Hook.up(context).withWhatsApp(facebookId)
 
 ### Error Callback
 
-In case something went wrong you can set a callback ;)
-\njust call the lambda and `it` will be the error message.
+In case something went wrong you can set a callback, just call the lambda and `it` will be the error message.
 ```kotlin
 Hook.up(context).withSMS(sampleNumber) {
   toast(it)
