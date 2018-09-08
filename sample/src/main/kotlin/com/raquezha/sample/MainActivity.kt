@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_help.*
 import net.raquezha.hookr.Hook
-
 import net.raquezha.playground.extensions.toast
+
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,25 +25,31 @@ class MainActivity : AppCompatActivity() {
         tvAppVersion.text = "App Version: ${BuildConfig.VERSION_NAME}"
         tvBuildDate.text = "Build Date: $buildDate"
 
-        val sample_number = "+639123456780"
+        val sampleNumber = "9154543084"
         btnSMS.setOnClickListener {
-            Hook.up(this@MainActivity).withSMS(sample_number)
+            Hook.up(this@MainActivity).withSMS(sampleNumber) { message ->
+                toast(message)
+            }
         }
 
         btnCall.setOnClickListener {
-            Hook.up(this@MainActivity).withPhoneCall(sample_number)
+            Hook.up(this@MainActivity).withPhoneCall(sampleNumber)
         }
 
         btnMessenger.setOnClickListener {
-            Hook.up(this@MainActivity).withMessenger("1232131232")
+            Hook.up(this@MainActivity).withMessenger("1232131232") {
+                toast(it)
+            }
         }
 
         btnViber.setOnClickListener {
-            Hook.up(this@MainActivity).withViber(sample_number)
+            Hook.up(this@MainActivity).withViber(sampleNumber) {
+                toast(it)
+            }
         }
 
         btnWhatsapp.setOnClickListener {
-            Hook.up(this@MainActivity).withWhatsApp(sample_number)
+            Hook.up(this@MainActivity).withWhatsApp(sampleNumber)
         }
     }
 }

@@ -4,8 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.annotation.NonNull
+
 
 object Hook {
     @JvmStatic
@@ -14,78 +14,113 @@ object Hook {
     }
 }
 
-class Hookers(var ctx: Context) {
+class Hookers(@NonNull var ctx: Context) {
+    var invalidMobileNumber = "Invalid mobile number"
+    var requiredMobileNumber = "Mobile Number is required"
+    var requiredfacebookId = "Facebook ID is required"
 
-    fun withMessenger(@NonNull facebookUserId: String) {
-        startHooking(Hookrs.MESSENGER, facebookUserId, null)
+    fun withMessenger(@NonNull facebookUserId: String, errorMsg: ((String) -> Unit)? = null) {
+        startHooking(Hookrs.MESSENGER, facebookUserId, null, errorMsg)
     }
 
-    fun withViber(@NonNull mobileNumber: String) {
-        startHooking(Hookrs.VIBER, mobileNumber)
+    fun withViber(@NonNull mobileNumber: String, errorMsg: ((String) -> Unit)? = null) {
+        startHooking(Hookrs.VIBER, mobileNumber, errorMsg)
     }
 
-    fun withSMS(@NonNull mobileNumber: String) {
-        startHooking(Hookrs.MESSAGES, null, mobileNumber)
+    fun withSMS(@NonNull mobileNumber: String, errorMsg: ((String) -> Unit)? = null) {
+        startHooking(Hookrs.MESSAGES, null, mobileNumber, errorMsg)
     }
 
-    fun withPhoneCall(@NonNull mobileNumber: String) {
-        startHooking(Hookrs.PHONE_CALL, null, mobileNumber)
+    fun withPhoneCall(@NonNull mobileNumber: String, errorMsg: ((String) -> Unit)? = null) {
+        startHooking(Hookrs.PHONE_CALL, null, mobileNumber, errorMsg)
     }
 
-    fun withWhatsApp(@NonNull mobileNumber: String) {
-        startHooking(Hookrs.WHATSAPP, null, mobileNumber)
+    fun withWhatsApp(@NonNull mobileNumber: String, errorMsg: ((String) -> Unit)? = null) {
+        startHooking(Hookrs.WHATSAPP, null, mobileNumber, errorMsg)
     }
 
-    private fun startHooking(app: Hookrs, mobileNumber: String) {
-        startHooking(app, null, mobileNumber)
+    private fun startHooking(app: Hookrs, mobileNumber: String, errorMsg: ((String) -> Unit)? = null) {
+        startHooking(app, null, mobileNumber, errorMsg)
     }
 
-    private fun startHooking(app: Hookrs, facebookUserId: String?, mobileNumber: String?) {
+    private fun startHooking(app: Hookrs, facebookUserId: String?, mobileNumber: String?, errorMsg: ((String) -> Unit)? = null) {
         try {
-            ctx.startActivity(getHookingIntent(app, facebookUserId, mobileNumber))
-
+            val intent = getHookingIntent(app, facebookUserId, mobileNumber, errorMsg)
+            if (intent != null)
+                ctx.startActivity(intent)
         } catch (ex: ActivityNotFoundException) {
-            Toast.makeText(ctx, "Please Install ${app.appName}", Toast.LENGTH_LONG).show()
+            errorMsg?.invoke("Please Install ${app.appName}")
+
         }
     }
 
-    private fun getHookingIntent(app: Hookrs, facebookUserId: String?, mobileNumber: String?): Intent {
+    private fun getHookingIntent(app: Hookrs, facebookUserId: String?, mobileNumber: String?, listener: ((String) -> Unit)? = null): Intent? {
         val intent = Intent(app.intent)
         when (app) {
             Hookrs.VIBER -> {
                 checkNotNull(mobileNumber) {
-                    throw NullPointerException("Mobile Number is required.")
+                    throw NullPointerException(requiredMobileNumber)
                 }
-                intent.data = Uri.parse("tel:" + Uri.encode(mobileNumber))
-                intent.setClassName(app.appId, "com.viber.voip.WelcomeActivity")
+                if (isValidMobileNumber(mobileNumber)) {
+                    intent.data = Uri.parse("tel:" + Uri.encode(mobileNumber))
+                    intent.setClassName(app.appId, "com.viber.voip.WelcomeActivity")
+                } else {
+                    listener?.invoke(invalidMobileNumber)
+                    return null
+                }
             }
             Hookrs.MESSAGES -> {
                 checkNotNull(mobileNumber) {
-                    throw NullPointerException("Mobile Number is required.")
+                    throw NullPointerException(requiredMobileNumber)
                 }
-                intent.data = Uri.parse("smsto:$mobileNumber")
+                if (isValidMobileNumber(mobileNumber)) {
+                    intent.data = Uri.parse("smsto:$mobileNumber")
+                } else {
+                    listener?.invoke(requiredMobileNumber)
+                    return null
+                }
             }
             Hookrs.WHATSAPP -> {
                 checkNotNull(mobileNumber) {
-                    throw NullPointerException("Mobile Number is required.")
+                    throw NullPointerException(requiredMobileNumber)
                 }
-                intent.data = Uri.parse("https://wa.up/$mobileNumber")
-
+                if (isValidMobileNumber(mobileNumber)) {
+                    intent.data = Uri.parse("https://wa.up/$mobileNumber")
+                } else {
+                    listener?.invoke(requiredMobileNumber)
+                    return null
+                }
             }
             Hookrs.MESSENGER -> {
                 checkNotNull(facebookUserId) {
-                    throw NullPointerException("Facebook User ID is required.")
+                    throw NullPointerException(requiredfacebookId)
                 }
-                intent.data = Uri.parse("fb-messenger://user/$facebookUserId")
+                if (facebookUserId!!.isEmpty()) {
+                    listener?.invoke(requiredfacebookId)
+                    return null
+                } else
+                    intent.data = Uri.parse("fb-messenger://user/$facebookUserId")
+
             }
             Hookrs.PHONE_CALL -> {
                 checkNotNull(mobileNumber) {
-                    throw NullPointerException("Mobile Number is required.")
+                    throw NullPointerException(requiredMobileNumber)
                 }
-                intent.data = Uri.parse("tel:$mobileNumber")
+                if (isValidMobileNumber(mobileNumber)) {
+                    intent.data = Uri.parse("tel:$mobileNumber")
+                } else {
+                    return null
+                    listener?.invoke(requiredMobileNumber)
+                }
             }
         }
         return intent
+    }
+
+    private fun isValidMobileNumber(mobileNumber: String?): Boolean {
+        var isValid = true
+        if (mobileNumber!! == "") isValid = false
+        return isValid
     }
 }
 
