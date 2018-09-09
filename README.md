@@ -1,7 +1,7 @@
 
 # Hookr (Kotlin)
 I use this in my applications and I thought I just make it into a library.<br>
-Simple Utility that hook up your app to this various external applications:
+Simple Utility that hook up your app to this external applications:
 
 1. Inbox (SMS)
 1. Phone
