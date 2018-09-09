@@ -85,7 +85,7 @@ class Hookers(@NonNull var ctx: Context) {
                     throw NullPointerException(requiredMobileNumber)
                 }
                 if (isValidMobileNumber(mobileNumber)) {
-                    intent.data = Uri.parse("https://wa.up/$mobileNumber")
+                    intent.data = Uri.parse("https://wa.me/$mobileNumber")
                 } else {
                     listener?.invoke(requiredMobileNumber)
                     return null
@@ -123,7 +123,6 @@ class Hookers(@NonNull var ctx: Context) {
         return isValid
     }
 }
-
 
 enum class Hookrs(var intent: Intent, var appName: String, var appId: String) {
     VIBER(Intent(Intent.ACTION_VIEW), "Viber", "com.viber.voip"),
