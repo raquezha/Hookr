@@ -1,4 +1,5 @@
 
+
 # Hookr (Kotlin)
 I use this in my applications and I thought I just make it into a library.<br>
 Simple Utility that hook up your app to this external applications:
@@ -10,6 +11,8 @@ Simple Utility that hook up your app to this external applications:
 1. Whatsapp
 
 This is usually used in Help/Support section where you link your app to external apps.
+
+implementation "com.github.raquezha:hookr:1.2.0.2"
 
 ## Usage
 
