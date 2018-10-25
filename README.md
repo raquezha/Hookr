@@ -33,7 +33,7 @@ dependencies {
 }
 ```
 
-That's it!
+That's it! In case of a build failed, try cleaning or rebuilding your project. If all else fails try to Invalidate Cache and Restart option
 
 ## Usage
 
